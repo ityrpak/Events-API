@@ -1,5 +1,6 @@
 package com.HIT.reactintegration.utils;
 
+import com.HIT.reactintegration.exceptions.NoRecordsFoundException;
 import com.HIT.reactintegration.exceptions.RecordNotSavedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -41,4 +42,14 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         log.info("Returning " + conflict.toString() + " status with " + exceptionBodyResponse + " body");
         return new ResponseEntity<Object>(exceptionBodyResponse, conflict);
     }
+
+    @ExceptionHandler(NoRecordsFoundException.class)
+    protected ResponseEntity<Object> handleNoRecordsFoundException(NoRecordsFoundException ex){
+        HttpStatus status = HttpStatus.OK;
+        HashMap<String, String> exceptionBodyResponse = new HashMap<>();
+        exceptionBodyResponse.put("Exception message", ex.getMessage());
+        log.info("Returning " + status.toString() + " status with " + exceptionBodyResponse + " body");
+        return new ResponseEntity<Object>(exceptionBodyResponse, status);
+    }
+
 }
