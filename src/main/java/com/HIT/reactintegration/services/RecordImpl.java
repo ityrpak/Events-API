@@ -13,8 +13,8 @@ public class RecordImpl implements IRecord{
     private RecordRepository recordRepository;
 
     @Override
-    public String createRecord(){
-        Record record = new Record();
+    public String createRecord(String recordContent){
+        Record record = new Record(recordContent);
         String responseMsg;
         try{
             recordRepository.save(record);
