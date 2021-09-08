@@ -24,16 +24,20 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
         log.info("Catching " + ex.getClass().getSimpleName() + " exception class");
-        HashMap<String, String> responseBody = new HashMap<>();
+        HashMap<String, String> errorsMap = new HashMap<>();
 
         switch (ex.getClass().getSimpleName()){
             case "MissingServletRequestPartException":
                 log.info("Casting " + MissingServletRequestPartException.class.getSimpleName());
                 MissingServletRequestPartException exception = (MissingServletRequestPartException) ex;
-                responseBody.put("Missing part", exception.getRequestPartName());
+                errorsMap.put("Missing part", exception.getRequestPartName());
         }
 
-        if (responseBody.isEmpty()) responseBody.put(EXCEPTION_MESSAGE_PLACEHOLDER,ex.getMessage());
+        if (errorsMap.isEmpty()) {
+            errorsMap.put("Exception", ex.getClass().getSimpleName());
+            errorsMap.put(EXCEPTION_MESSAGE_PLACEHOLDER, ex.getMessage());
+        };
+        Map responseBody = createErrorResponse(errorsMap);
         return super.handleExceptionInternal(ex, responseBody, headers, status, request);
     }
 
@@ -59,6 +63,10 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     private Map<String, Map<String, String>> createErrorResponse(Exception ex) {
         return Map.of("error", Map.of(EXCEPTION_MESSAGE_PLACEHOLDER, ex.getMessage()));
+    }
+
+    private Map<String, Map<String, String>> createErrorResponse(Map errors) {
+        return Map.of("error", errors);
     }
 
 }
