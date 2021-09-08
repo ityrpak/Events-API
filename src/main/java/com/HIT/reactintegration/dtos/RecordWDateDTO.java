@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class RecordWDateDTO {
 
     private String recordContent;
-    @JsonFormat(pattern = "dd/MM/yyyy'T'HH:MM:SS")
+    @JsonFormat(pattern = "dd/MM/yyyy'@'hh:mm:ss")
     private LocalDateTime createdAt;
 
 }
