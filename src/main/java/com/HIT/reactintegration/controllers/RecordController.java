@@ -16,7 +16,7 @@ public class RecordController {
     private RecordImpl recordService;
 
     @PostMapping(value = "/record/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<?> createRecord(@RequestPart("record content") String recordContent){
+    public ResponseEntity<?> createRecord(@RequestPart("record content") String recordContent){
         return ResponseEntity.status(HttpStatus.OK).body(recordService.createRecord(recordContent));
     }
 
