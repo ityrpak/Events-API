@@ -1,5 +1,6 @@
 package com.HIT.reactintegration.controllers;
 
+import com.HIT.reactintegration.dtos.RecordDTO;
 import com.HIT.reactintegration.services.RecordImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,7 @@ public class RecordController {
     private RecordImpl recordService;
 
     @PostMapping(value = "/record/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createRecord(@RequestBody String recordContent){
+    public ResponseEntity<?> createRecord(@RequestBody RecordDTO recordContent){
         return ResponseEntity.status(HttpStatus.OK).body(recordService.createRecord(recordContent));
     }
 

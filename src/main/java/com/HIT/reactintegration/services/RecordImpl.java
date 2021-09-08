@@ -1,6 +1,7 @@
 package com.HIT.reactintegration.services;
 
 import com.HIT.reactintegration.dtos.RecordDTO;
+import com.HIT.reactintegration.dtos.RecordWDateDTO;
 import com.HIT.reactintegration.entities.Record;
 import com.HIT.reactintegration.exceptions.NoRecordsFoundException;
 import com.HIT.reactintegration.exceptions.RecordNotSavedException;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
@@ -20,12 +22,12 @@ public class RecordImpl implements IRecord{
     private RecordRepository recordRepository;
 
     @Override
-    public String createRecord(String recordContent){
-        String responseMsg;
+    public Map createRecord(RecordDTO recordContent){
+        Map responseMsg;
         try{
-            Record record = new Record(recordContent);
+            Record record = new Record(recordContent.getRecordContent());
             recordRepository.save(record);
-            responseMsg = "Record saved";
+            responseMsg = getSuccessResponse(Map.of("Success message", "Record saved"));
         } catch (DataIntegrityViolationException ex){
             throw new RecordNotSavedException(ex.getCause().getMessage());
         }
@@ -33,21 +35,27 @@ public class RecordImpl implements IRecord{
     }
 
     @Override
-    public HashMap<Integer, RecordDTO> getAllRecords() {
+    public Map getAllRecords() {
+        Map responseMsg;
         List<Record> all = recordRepository.findAll();
         if (all.isEmpty()) throw new NoRecordsFoundException("Records");
 
         AtomicInteger recordNumber = new AtomicInteger(1);
-        HashMap<Integer, RecordDTO> allRecords = new HashMap<>();
+        HashMap<Integer, RecordWDateDTO> allRecords = new HashMap<>();
         all.stream().forEach(record -> {
             allRecords.put(
                     recordNumber.getAndIncrement(),
-                    RecordDTO
+                    RecordWDateDTO
                             .builder()
                             .recordContent(record.getRecordContent())
                             .createdAt(record.getCreatedAt())
                             .build());
         });
-        return allRecords;
+        responseMsg = getSuccessResponse(allRecords);
+        return responseMsg;
+    }
+
+    private Map<String, Map> getSuccessResponse(Map map) {
+        return Map.of("data", map);
     }
 }
