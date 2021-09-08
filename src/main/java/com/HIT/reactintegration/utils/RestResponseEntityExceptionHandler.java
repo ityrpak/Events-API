@@ -1,10 +1,12 @@
 package com.HIT.reactintegration.utils;
 
+import com.HIT.reactintegration.exceptions.RecordNotSavedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -29,5 +31,14 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
         if (responseBody.isEmpty()) responseBody.put("Exception",ex.getMessage());
         return super.handleExceptionInternal(ex, responseBody, headers, status, request);
+    }
+
+    @ExceptionHandler(RecordNotSavedException.class)
+    protected ResponseEntity<Object> handleConstraintViolationException(RecordNotSavedException ex){
+        HttpStatus conflict = HttpStatus.CONFLICT;
+        HashMap<String, String> exceptionBodyResponse = new HashMap<>();
+        exceptionBodyResponse.put("Exception message", ex.getMessage());
+        log.info("Returning " + conflict.toString() + " status with " + exceptionBodyResponse + " body");
+        return new ResponseEntity<Object>(exceptionBodyResponse, conflict);
     }
 }
