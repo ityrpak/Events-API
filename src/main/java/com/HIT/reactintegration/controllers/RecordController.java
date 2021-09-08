@@ -2,6 +2,7 @@ package com.HIT.reactintegration.controllers;
 
 import com.HIT.reactintegration.dtos.RecordDTO;
 import com.HIT.reactintegration.services.RecordImpl;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Tag(name = "Record", description = "Records related endpoints")
 public class RecordController {
 
     @Autowired
