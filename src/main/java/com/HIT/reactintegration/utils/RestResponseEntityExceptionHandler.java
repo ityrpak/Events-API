@@ -18,6 +18,8 @@ import java.util.HashMap;
 @Slf4j
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private static final String EXCEPTION_MESSAGE_PLACEHOLDER = "Exception message";
+
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
         log.info("Catching " + ex.getClass().getSimpleName() + " exception class");
@@ -30,26 +32,30 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                 responseBody.put("Missing part", exception.getRequestPartName());
         }
 
-        if (responseBody.isEmpty()) responseBody.put("Exception",ex.getMessage());
+        if (responseBody.isEmpty()) responseBody.put(EXCEPTION_MESSAGE_PLACEHOLDER,ex.getMessage());
         return super.handleExceptionInternal(ex, responseBody, headers, status, request);
     }
 
     @ExceptionHandler(RecordNotSavedException.class)
     protected ResponseEntity<Object> handleConstraintViolationException(RecordNotSavedException ex){
-        HttpStatus conflict = HttpStatus.CONFLICT;
+        HttpStatus httpStatus = HttpStatus.CONFLICT;
         HashMap<String, String> exceptionBodyResponse = new HashMap<>();
-        exceptionBodyResponse.put("Exception message", ex.getMessage());
-        log.info("Returning " + conflict.toString() + " status with " + exceptionBodyResponse + " body");
-        return new ResponseEntity<Object>(exceptionBodyResponse, conflict);
+        exceptionBodyResponse.put(EXCEPTION_MESSAGE_PLACEHOLDER, ex.getMessage());
+        log.info(returnStatus(httpStatus, exceptionBodyResponse));
+        return new ResponseEntity<Object>(exceptionBodyResponse, httpStatus);
     }
 
     @ExceptionHandler(NoRecordsFoundException.class)
     protected ResponseEntity<Object> handleNoRecordsFoundException(NoRecordsFoundException ex){
-        HttpStatus status = HttpStatus.OK;
+        HttpStatus httpStatus = HttpStatus.OK;
         HashMap<String, String> exceptionBodyResponse = new HashMap<>();
-        exceptionBodyResponse.put("Exception message", ex.getMessage());
-        log.info("Returning " + status.toString() + " status with " + exceptionBodyResponse + " body");
-        return new ResponseEntity<Object>(exceptionBodyResponse, status);
+        exceptionBodyResponse.put(EXCEPTION_MESSAGE_PLACEHOLDER, ex.getMessage());
+        log.info(returnStatus(httpStatus, exceptionBodyResponse));
+        return new ResponseEntity<Object>(exceptionBodyResponse, httpStatus);
+    }
+
+    private String returnStatus(HttpStatus httpStatus, HashMap<String, String> exceptionBodyResponse) {
+        return "Returning " + httpStatus.toString() + " status with " + exceptionBodyResponse + " body";
     }
 
 }
