@@ -13,6 +13,7 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
 @Slf4j
@@ -39,8 +40,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler(RecordNotSavedException.class)
     protected ResponseEntity<Object> handleConstraintViolationException(RecordNotSavedException ex){
         HttpStatus httpStatus = HttpStatus.CONFLICT;
-        HashMap<String, String> exceptionBodyResponse = new HashMap<>();
-        exceptionBodyResponse.put(EXCEPTION_MESSAGE_PLACEHOLDER, ex.getMessage());
+        Map exceptionBodyResponse = createErrorResponse(ex);
         log.info(returnStatus(httpStatus, exceptionBodyResponse));
         return new ResponseEntity<Object>(exceptionBodyResponse, httpStatus);
     }
@@ -48,14 +48,17 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler(NoRecordsFoundException.class)
     protected ResponseEntity<Object> handleNoRecordsFoundException(NoRecordsFoundException ex){
         HttpStatus httpStatus = HttpStatus.OK;
-        HashMap<String, String> exceptionBodyResponse = new HashMap<>();
-        exceptionBodyResponse.put(EXCEPTION_MESSAGE_PLACEHOLDER, ex.getMessage());
+        Map exceptionBodyResponse = createErrorResponse(ex);
         log.info(returnStatus(httpStatus, exceptionBodyResponse));
         return new ResponseEntity<Object>(exceptionBodyResponse, httpStatus);
     }
 
-    private String returnStatus(HttpStatus httpStatus, HashMap<String, String> exceptionBodyResponse) {
+    private String returnStatus(HttpStatus httpStatus, Map exceptionBodyResponse) {
         return "Returning " + httpStatus.toString() + " status with " + exceptionBodyResponse + " body";
+    }
+
+    private Map<String, Map<String, String>> createErrorResponse(Exception ex) {
+        return Map.of("error", Map.of(EXCEPTION_MESSAGE_PLACEHOLDER, ex.getMessage()));
     }
 
 }
