@@ -11,11 +11,11 @@ import javax.validation.constraints.NotBlank;
 
 @Data @Builder
 @NoArgsConstructor @AllArgsConstructor
-@Schema(name = "Record", description = "Record creation object")
-public class RecordDTO {
+@Schema(name = "Event", description = "Event creation object")
+public class EventDTO {
 
-    @JsonProperty(value = "Record content")
+    @JsonProperty(value = "Event content")
     @NotBlank(message = "must not be blank")
-    private String recordContent;
+    private String eventContent;
 
 }

@@ -1,11 +1,11 @@
 package com.HIT.reactintegration.services;
 
-import com.HIT.reactintegration.dtos.RecordDTO;
-import com.HIT.reactintegration.dtos.RecordWDateDTO;
-import com.HIT.reactintegration.entities.Record;
+import com.HIT.reactintegration.dtos.EventDTO;
+import com.HIT.reactintegration.dtos.EventWDateDTO;
+import com.HIT.reactintegration.entities.Event;
 import com.HIT.reactintegration.exceptions.NoRecordsFoundException;
-import com.HIT.reactintegration.exceptions.RecordNotSavedException;
-import com.HIT.reactintegration.repositories.RecordRepository;
+import com.HIT.reactintegration.exceptions.EventNotSavedException;
+import com.HIT.reactintegration.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -16,39 +16,39 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
-public class RecordImpl implements IRecord{
+public class EventImpl implements IEvent {
 
     @Autowired
-    private RecordRepository recordRepository;
+    private EventRepository eventRepository;
 
     @Override
-    public Map createRecord(RecordDTO recordContent){
+    public Map createEvent(EventDTO eventContent){
         Map responseMsg;
         try{
-            Record record = new Record(recordContent.getRecordContent());
-            recordRepository.save(record);
-            responseMsg = getSuccessResponse(Map.of("Success message", "Record saved"));
+            Event event = new Event(eventContent.getEventContent());
+            eventRepository.save(event);
+            responseMsg = getSuccessResponse(Map.of("Success message", "Event saved"));
         } catch (DataIntegrityViolationException ex){
-            throw new RecordNotSavedException(ex.getCause().getMessage());
+            throw new EventNotSavedException(ex.getCause().getMessage());
         }
         return responseMsg;
     }
 
     @Override
-    public Map getAllRecords() {
+    public Map getAllEvents() {
         Map responseMsg;
-        List<Record> all = recordRepository.findAll();
+        List<Event> all = eventRepository.findAll();
         if (all.isEmpty()) throw new NoRecordsFoundException("Records");
 
         AtomicInteger recordNumber = new AtomicInteger(1);
-        HashMap<Integer, RecordWDateDTO> allRecords = new HashMap<>();
-        all.stream().forEach(record -> {
+        HashMap<Integer, EventWDateDTO> allRecords = new HashMap<>();
+        all.stream().forEach(event -> {
             allRecords.put(
                     recordNumber.getAndIncrement(),
-                    RecordWDateDTO
+                    EventWDateDTO
                             .builder()
-                            .recordContent(record.getRecordContent())
-                            .createdAt(record.getCreatedAt())
+                            .eventContent(event.getEventTitle())
+                            .createdAt(event.getCreatedAt())
                             .build());
         });
         responseMsg = getSuccessResponse(allRecords);

@@ -1,7 +1,7 @@
 package com.HIT.reactintegration.utils;
 
 import com.HIT.reactintegration.exceptions.NoRecordsFoundException;
-import com.HIT.reactintegration.exceptions.RecordNotSavedException;
+import com.HIT.reactintegration.exceptions.EventNotSavedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -47,8 +47,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return super.handleExceptionInternal(ex, responseBody, headers, status, request);
     }
 
-    @ExceptionHandler(RecordNotSavedException.class)
-    protected ResponseEntity<Object> handleConstraintViolationException(RecordNotSavedException ex){
+    @ExceptionHandler(EventNotSavedException.class)
+    protected ResponseEntity<Object> handleConstraintViolationException(EventNotSavedException ex){
         HttpStatus httpStatus = HttpStatus.CONFLICT;
         Map exceptionBodyResponse = createErrorResponse(ex);
         log.info(returnStatus(httpStatus, exceptionBodyResponse));
