@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.UUID;
 
-@Entity (name = "USER")
+@Entity (name = "USERS")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,8 +19,15 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @Column(name = "id")
-    private UUID id = UUID.randomUUID();
+    @Column(name = "id", updatable = false, nullable = false)
+    @GeneratedValue (generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @ColumnDefault("random_uuid()")
+    @Type(type = "uuid-char")
+    private UUID id;
 
     @Column(name = "nickname", nullable = false, unique = true)
     private String nickname;

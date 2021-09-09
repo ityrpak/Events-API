@@ -1,5 +1,6 @@
 package com.HIT.reactintegration.utils;
 
+import com.HIT.reactintegration.exceptions.EntityNotFoundException;
 import com.HIT.reactintegration.exceptions.NoRecordsFoundException;
 import com.HIT.reactintegration.exceptions.EventNotSavedException;
 import lombok.extern.slf4j.Slf4j;
@@ -58,6 +59,14 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler(NoRecordsFoundException.class)
     protected ResponseEntity<Object> handleNoRecordsFoundException(NoRecordsFoundException ex){
         HttpStatus httpStatus = HttpStatus.OK;
+        Map exceptionBodyResponse = createErrorResponse(ex);
+        log.info(returnStatus(httpStatus, exceptionBodyResponse));
+        return new ResponseEntity<Object>(exceptionBodyResponse, httpStatus);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    protected ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException ex){
+        HttpStatus httpStatus = HttpStatus.CONFLICT;
         Map exceptionBodyResponse = createErrorResponse(ex);
         log.info(returnStatus(httpStatus, exceptionBodyResponse));
         return new ResponseEntity<Object>(exceptionBodyResponse, httpStatus);

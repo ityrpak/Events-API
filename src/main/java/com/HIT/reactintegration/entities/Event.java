@@ -1,16 +1,14 @@
 package com.HIT.reactintegration.entities;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
 
-import javax.persistence.Column;
+import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity(name = "RECORD")
+@Entity(name = "events")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,7 +16,14 @@ import java.util.UUID;
 public class Event {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false, nullable = false)
+    @GeneratedValue (generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @ColumnDefault("random_uuid()")
+    @Type(type = "uuid-char")
     private UUID id = UUID.randomUUID();
 
     @Column(name = "title", nullable = false)
@@ -27,11 +32,12 @@ public class Event {
     @Column(name = "description", nullable = false)
     private String eventDescription;
 
-    @Column(name = "image_URL", nullable = false)
+    @Column(name = "image_URL")
     private String eventImageURL;
 
-    @Column(name = "author", nullable = false)
-    private String eventAuthor;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "author_id", nullable = false)
+    private User eventAuthor;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -41,11 +47,10 @@ public class Event {
     @Column(name = "last_updated")
     private LocalDateTime lastUpdated;
 
-    @UpdateTimestamp
-    @Column(name = "expiration")
-    private LocalDateTime recordExpiration;
 
-    public Event(String eventTitle) {
+    public Event(String eventTitle, String eventDescription, User eventAuthor) {
         this.eventTitle = eventTitle;
+        this.eventDescription = eventDescription;
+        this.eventAuthor = eventAuthor;
     }
 }
