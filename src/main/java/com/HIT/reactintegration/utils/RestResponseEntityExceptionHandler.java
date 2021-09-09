@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -29,8 +30,13 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         switch (ex.getClass().getSimpleName()){
             case "MissingServletRequestPartException":
                 log.info("Casting " + MissingServletRequestPartException.class.getSimpleName());
-                MissingServletRequestPartException exception = (MissingServletRequestPartException) ex;
-                errorsMap.put("Missing part", exception.getRequestPartName());
+                MissingServletRequestPartException exception1 = (MissingServletRequestPartException) ex;
+                errorsMap.put("Missing part", exception1.getRequestPartName());
+
+            case "MethodArgumentNotValidException":
+                log.info("Casting " + MethodArgumentNotValidException.class.getSimpleName());
+                MethodArgumentNotValidException exception2 = (MethodArgumentNotValidException) ex;
+                errorsMap.put("Invalid argument", exception2.getParameter().getParameterName());
         }
 
         if (errorsMap.isEmpty()) {
