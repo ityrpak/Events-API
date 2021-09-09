@@ -27,8 +27,8 @@ public class Event {
     @Column(name = "description", nullable = false)
     private String eventDescription;
 
-    @Column(name = "image", nullable = false)
-    private String eventImage;
+    @Column(name = "image_URL", nullable = false)
+    private String eventImageURL;
 
     @Column(name = "author", nullable = false)
     private String eventAuthor;

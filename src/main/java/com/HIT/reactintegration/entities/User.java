@@ -30,8 +30,8 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "image")
-    private String eventImage;
+    @Column(name = "image_URL")
+    private String eventImageURL;
 
     public User(String nickname) {
         this.nickname = nickname;
