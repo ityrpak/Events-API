@@ -28,26 +28,37 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
         log.info("Catching " + ex.getClass().getSimpleName() + " exception class");
+        ErrorResponseDTO errorResponseDTO = null;
         HashMap<String, String> errorsMap = new HashMap<>();
 
         switch (ex.getClass().getSimpleName()){
             case "MissingServletRequestPartException":
                 log.info("Casting " + MissingServletRequestPartException.class.getSimpleName());
-                MissingServletRequestPartException exception1 = (MissingServletRequestPartException) ex;
-                errorsMap.put("Missing part", exception1.getRequestPartName());
+                MissingServletRequestPartException missingServletRequestPartException = (MissingServletRequestPartException) ex;
+                errorResponseDTO = createErrorResponse(
+                        missingServletRequestPartException,
+                        status,
+                        "Missing part " +  missingServletRequestPartException.getRequestPartName());
 
             case "MethodArgumentNotValidException":
                 log.info("Casting " + MethodArgumentNotValidException.class.getSimpleName());
-                MethodArgumentNotValidException exception2 = (MethodArgumentNotValidException) ex;
-                errorsMap.put("Invalid argument", exception2.getParameter().getParameterName());
+                MethodArgumentNotValidException methodArgumentNotValidException = (MethodArgumentNotValidException) ex;
+                errorResponseDTO = createErrorResponse(
+                        methodArgumentNotValidException,
+                        status,
+                        "Invalid argument " +  methodArgumentNotValidException.getParameter().getParameterName());
         }
 
-        if (errorsMap.isEmpty()) {
-            errorsMap.put("Exception", ex.getClass().getSimpleName());
-            errorsMap.put(EXCEPTION_MESSAGE_PLACEHOLDER, ex.getMessage());
+        if (errorResponseDTO == null) {
+            errorResponseDTO.setCode(status.value());
+            errorResponseDTO.setStatus(status.getReasonPhrase());
+            errorResponseDTO.setExceptions(ExceptionDTO.builder()
+                    .exceptionName(ex.getClass().getSimpleName())
+                    .exceptionMessage(ex.getMessage())
+                    .build());
         };
-        Map responseBody = createErrorResponse(errorsMap, status);
-        return super.handleExceptionInternal(ex, responseBody, headers, status, request);
+
+        return super.handleExceptionInternal(ex, errorResponseDTO, headers, status, request);
     }
 
     @ExceptionHandler(EventNotSavedException.class)
@@ -89,9 +100,17 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                 .build();
     }
 
-    private Map<String, Object> createErrorResponse(Map errors, HttpStatus httpStatus) {
-        return Map.of("code", httpStatus.value(),"status", httpStatus.getReasonPhrase(), "error", errors);
+    private ErrorResponseDTO createErrorResponse(Exception ex, HttpStatus httpStatus, String customMessage) {
+        return ErrorResponseDTO.builder()
+                .code(httpStatus.value())
+                .status(httpStatus.getReasonPhrase())
+                .exceptions(ExceptionDTO.builder()
+                        .exceptionName(ex.getClass().getSimpleName())
+                        .exceptionMessage(customMessage)
+                        .build())
+                .build();
     }
+
 
 
 }
