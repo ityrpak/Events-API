@@ -2,6 +2,7 @@ package com.HIT.reactintegration.services;
 
 import com.HIT.reactintegration.dtos.eventsdto.EventDTO;
 import com.HIT.reactintegration.dtos.eventsdto.EventWDateDTO;
+import com.HIT.reactintegration.dtos.responsesdto.SuccessResponseDTO;
 import com.HIT.reactintegration.entities.Event;
 import com.HIT.reactintegration.exceptions.EntityNotFoundException;
 import com.HIT.reactintegration.exceptions.NoRecordsFoundException;
@@ -10,6 +11,7 @@ import com.HIT.reactintegration.repositories.EventRepository;
 import com.HIT.reactintegration.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -28,8 +30,8 @@ public class EventImpl implements IEvent {
     private UserRepository userRepository;
 
     @Override
-    public Map createEvent(EventDTO eventDTO){
-        Map responseMsg;
+    public SuccessResponseDTO createEvent(EventDTO eventDTO){
+        SuccessResponseDTO responseMsg;
         try{
             Event event = new Event(
                     eventDTO.getEventTitle(),
@@ -46,8 +48,8 @@ public class EventImpl implements IEvent {
     }
 
     @Override
-    public Map getAllEvents() {
-        Map responseMsg;
+    public SuccessResponseDTO getAllEvents() {
+        SuccessResponseDTO responseMsg;
         List<Event> all = eventRepository.findAll();
         if (all.isEmpty()) throw new NoRecordsFoundException("Records");
 
@@ -68,7 +70,11 @@ public class EventImpl implements IEvent {
         return responseMsg;
     }
 
-    private Map<String, Map> getSuccessResponse(Map map) {
-        return Map.of("data", map);
+    private SuccessResponseDTO getSuccessResponse(Object data) {
+        return SuccessResponseDTO.builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK.getReasonPhrase())
+                .data(data)
+                .build();
     }
 }
