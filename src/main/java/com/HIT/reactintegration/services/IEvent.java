@@ -1,6 +1,6 @@
 package com.HIT.reactintegration.services;
 
-import com.HIT.reactintegration.dtos.EventDTO;
+import com.HIT.reactintegration.dtos.eventsdto.EventDTO;
 
 import java.util.Map;
 

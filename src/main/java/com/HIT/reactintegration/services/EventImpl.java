@@ -1,7 +1,7 @@
 package com.HIT.reactintegration.services;
 
-import com.HIT.reactintegration.dtos.EventDTO;
-import com.HIT.reactintegration.dtos.EventWDateDTO;
+import com.HIT.reactintegration.dtos.eventsdto.EventDTO;
+import com.HIT.reactintegration.dtos.eventsdto.EventWDateDTO;
 import com.HIT.reactintegration.entities.Event;
 import com.HIT.reactintegration.exceptions.EntityNotFoundException;
 import com.HIT.reactintegration.exceptions.NoRecordsFoundException;

@@ -1,4 +1,4 @@
-package com.HIT.reactintegration.dtos;
+package com.HIT.reactintegration.dtos.eventsdto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

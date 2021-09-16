@@ -1,6 +1,6 @@
 package com.HIT.reactintegration.controllers;
 
-import com.HIT.reactintegration.dtos.EventDTO;
+import com.HIT.reactintegration.dtos.eventsdto.EventDTO;
 import com.HIT.reactintegration.services.EventImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

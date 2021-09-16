@@ -1,8 +1,10 @@
 package com.HIT.reactintegration.utils;
 
+import com.HIT.reactintegration.dtos.exceptiondto.ExceptionDTO;
 import com.HIT.reactintegration.exceptions.EntityNotFoundException;
 import com.HIT.reactintegration.exceptions.NoRecordsFoundException;
 import com.HIT.reactintegration.exceptions.EventNotSavedException;
+import com.HIT.reactintegration.dtos.responsesdto.ErrorResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -44,44 +46,52 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
             errorsMap.put("Exception", ex.getClass().getSimpleName());
             errorsMap.put(EXCEPTION_MESSAGE_PLACEHOLDER, ex.getMessage());
         };
-        Map responseBody = createErrorResponse(errorsMap);
+        Map responseBody = createErrorResponse(errorsMap, status);
         return super.handleExceptionInternal(ex, responseBody, headers, status, request);
     }
 
     @ExceptionHandler(EventNotSavedException.class)
     protected ResponseEntity<Object> handleConstraintViolationException(EventNotSavedException ex){
         HttpStatus httpStatus = HttpStatus.CONFLICT;
-        Map exceptionBodyResponse = createErrorResponse(ex);
-        log.info(returnStatus(httpStatus, exceptionBodyResponse));
+        ErrorResponseDTO exceptionBodyResponse = createErrorResponse(ex, httpStatus);
+        log.info(returnStatus(exceptionBodyResponse));
         return new ResponseEntity<Object>(exceptionBodyResponse, httpStatus);
     }
 
     @ExceptionHandler(NoRecordsFoundException.class)
     protected ResponseEntity<Object> handleNoRecordsFoundException(NoRecordsFoundException ex){
         HttpStatus httpStatus = HttpStatus.OK;
-        Map exceptionBodyResponse = createErrorResponse(ex);
-        log.info(returnStatus(httpStatus, exceptionBodyResponse));
+        ErrorResponseDTO exceptionBodyResponse = createErrorResponse(ex, httpStatus);
+        log.info(returnStatus(exceptionBodyResponse));
         return new ResponseEntity<Object>(exceptionBodyResponse, httpStatus);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException ex){
         HttpStatus httpStatus = HttpStatus.CONFLICT;
-        Map exceptionBodyResponse = createErrorResponse(ex);
-        log.info(returnStatus(httpStatus, exceptionBodyResponse));
+        ErrorResponseDTO exceptionBodyResponse = createErrorResponse(ex, httpStatus);
+        log.info(returnStatus(exceptionBodyResponse));
         return new ResponseEntity<Object>(exceptionBodyResponse, httpStatus);
     }
 
-    private String returnStatus(HttpStatus httpStatus, Map exceptionBodyResponse) {
-        return "Returning " + httpStatus.toString() + " status with " + exceptionBodyResponse + " body";
+    private String returnStatus(ErrorResponseDTO err) {
+        return "Returning " + err.getCode() + " " + err.getStatus() + " status with " + err.getExceptions() + " body";
     }
 
-    private Map<String, Map<String, String>> createErrorResponse(Exception ex) {
-        return Map.of("error", Map.of(EXCEPTION_MESSAGE_PLACEHOLDER, ex.getMessage()));
+    private ErrorResponseDTO createErrorResponse(Exception ex, HttpStatus httpStatus) {
+        return ErrorResponseDTO.builder()
+                .code(httpStatus.value())
+                .status(httpStatus.getReasonPhrase())
+                .exceptions(ExceptionDTO.builder()
+                        .exceptionName(ex.getClass().getSimpleName())
+                        .exceptionMessage(ex.getMessage())
+                        .build())
+                .build();
     }
 
-    private Map<String, Map<String, String>> createErrorResponse(Map errors) {
-        return Map.of("error", errors);
+    private Map<String, Object> createErrorResponse(Map errors, HttpStatus httpStatus) {
+        return Map.of("code", httpStatus.value(),"status", httpStatus.getReasonPhrase(), "error", errors);
     }
+
 
 }

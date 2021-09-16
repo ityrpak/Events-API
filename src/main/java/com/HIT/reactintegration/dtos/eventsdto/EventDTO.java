@@ -1,4 +1,4 @@
-package com.HIT.reactintegration.dtos;
+package com.HIT.reactintegration.dtos.eventsdto;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,15 +17,15 @@ import java.time.LocalDateTime;
 @Schema(name = "Event", description = "Event creation object")
 public class EventDTO {
 
-    @JsonProperty(value = "Event title")
+    @JsonProperty(value = "eventTitle")
     @NotBlank(message = "must not be blank")
     private String eventTitle;
 
-    @JsonProperty(value = "Event description")
+    @JsonProperty(value = "eventDescription")
     @NotBlank(message = "must not be blank")
     private String eventDescription;
 
-    @JsonProperty(value = "Author nickname")
+    @JsonProperty(value = "authorNickname")
     @NotBlank(message = "must not be blank")
     private String eventUserNickname;
 
