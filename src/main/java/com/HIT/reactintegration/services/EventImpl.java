@@ -40,7 +40,7 @@ public class EventImpl implements IEvent {
         } catch (DataIntegrityViolationException ex){
             throw new EventNotSavedException(ex.getCause().getMessage());
         } catch (NoSuchElementException ex){
-            throw new EntityNotFoundException(eventDTO.getEventUserNickname());
+            throw new EntityNotFoundException("Nickname" ,eventDTO.getEventUserNickname());
         }
         return responseMsg;
     }
