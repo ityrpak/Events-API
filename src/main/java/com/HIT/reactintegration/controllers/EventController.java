@@ -15,16 +15,16 @@ import org.springframework.web.bind.annotation.*;
 public class EventController {
 
     @Autowired
-    private EventImpl recordService;
+    private EventImpl eventService;
 
     @PostMapping(value = "/events", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createEvent(@RequestBody @Validated EventDTO eventContent){
-        return ResponseEntity.status(HttpStatus.OK).body(recordService.createEvent(eventContent));
+        return ResponseEntity.status(HttpStatus.OK).body(eventService.createEvent(eventContent));
     }
 
     @GetMapping(value = "/events", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAllEvents(){
-        return ResponseEntity.status(HttpStatus.OK).body(recordService.getAllEvents());
+        return ResponseEntity.status(HttpStatus.OK).body(eventService.getAllEvents());
     }
 
 }
