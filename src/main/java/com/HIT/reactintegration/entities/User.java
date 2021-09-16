@@ -32,8 +32,11 @@ public class User implements UserDetails {
     @Type(type = "uuid-char")
     private UUID id;
 
-    @Column(name = "nickname", nullable = false, unique = true)
+    @Column(name = "nickname", nullable = false, unique = true, updatable = false)
     private String nickname;
+
+    @Column(name = "password", nullable = false, unique = true)
+    private String password;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "role_id", nullable = false)
@@ -46,7 +49,7 @@ public class User implements UserDetails {
     private String lastName;
 
     @Column(name = "image_URL")
-    private String eventImageURL;
+    private String profilePhotoURL;
 
     public User(String nickname) {
         this.nickname = nickname;
