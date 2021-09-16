@@ -1,11 +1,18 @@
-INSERT INTO users
-("nickname", "first_name", "last_name")
+INSERT INTO roles
+("role_name")
 VALUES
-('usuario1', 'Ivan', 'Tyrpak'),
-('usuario2', 'Juan', 'Perez'),
-('usuario3', 'Andres', 'Fuegos'),
-('usuario4', 'Leandro', 'Gutierrez'),
-('usuario5', 'Pedro', 'Gomez');
+('USER_ROLE'),
+('MODERATOR_ROLE'),
+('ADMIN_ROLE');
+
+INSERT INTO users
+("nickname", "first_name", "last_name", "role_id")
+VALUES
+('usuario1', 'Ivan', 'Tyrpak', (SELECT roles.id FROM roles WHERE role_name='ADMIN_ROLE')),
+('usuario2', 'Juan', 'Perez', (SELECT roles.id FROM roles WHERE role_name='MODERATOR_ROLE')),
+('usuario3', 'Andres', 'Fuegos', (SELECT roles.id FROM roles WHERE role_name='USER_ROLE')),
+('usuario4', 'Leandro', 'Gutierrez', (SELECT roles.id FROM roles WHERE role_name='USER_ROLE')),
+('usuario5', 'Pedro', 'Gomez', (SELECT roles.id FROM roles WHERE role_name='USER_ROLE'));
 
 INSERT INTO events
 ("title", "description", "author_id", "created_at","last_updated")
