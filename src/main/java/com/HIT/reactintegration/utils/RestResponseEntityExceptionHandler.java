@@ -17,7 +17,6 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @ControllerAdvice
 @Slf4j
