@@ -1,7 +1,7 @@
 package com.HIT.reactintegration.controllers;
 
 import com.HIT.reactintegration.dtos.eventsdto.EventDTO;
-import com.HIT.reactintegration.services.EventImpl;
+import com.HIT.reactintegration.services.EventServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class EventController {
 
     @Autowired
-    private EventImpl eventService;
+    private EventServiceImpl eventService;
 
     @PostMapping(value = "/events", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createEvent(@RequestBody @Validated EventDTO eventContent){

@@ -1,6 +1,7 @@
 package com.HIT.reactintegration.utils;
 
 import com.HIT.reactintegration.dtos.exceptiondto.ExceptionDTO;
+import com.HIT.reactintegration.exceptions.EntityAlreadyExistsException;
 import com.HIT.reactintegration.exceptions.EntityNotFoundException;
 import com.HIT.reactintegration.exceptions.NoRecordsFoundException;
 import com.HIT.reactintegration.exceptions.EventNotSavedException;
@@ -78,6 +79,14 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(EntityNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException ex){
+        HttpStatus httpStatus = HttpStatus.CONFLICT;
+        ErrorResponseDTO exceptionBodyResponse = createErrorResponse(ex, httpStatus);
+        log.info(returnStatus(exceptionBodyResponse));
+        return new ResponseEntity<Object>(exceptionBodyResponse, httpStatus);
+    }
+
+    @ExceptionHandler(EntityAlreadyExistsException.class)
+    protected ResponseEntity<Object> handleEntityAlreadyExistsException(EntityAlreadyExistsException ex){
         HttpStatus httpStatus = HttpStatus.CONFLICT;
         ErrorResponseDTO exceptionBodyResponse = createErrorResponse(ex, httpStatus);
         log.info(returnStatus(exceptionBodyResponse));

@@ -5,7 +5,7 @@ import com.HIT.reactintegration.dtos.responsesdto.SuccessResponseDTO;
 
 import java.util.Map;
 
-public interface IEvent {
+public interface IEventService {
     SuccessResponseDTO createEvent(EventDTO eventContent);
 
     SuccessResponseDTO getAllEvents();

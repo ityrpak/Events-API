@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
-public class EventImpl implements IEvent {
+public class EventServiceImpl implements IEventService {
 
     @Autowired
     private EventRepository eventRepository;
