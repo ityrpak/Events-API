@@ -50,13 +50,15 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         }
 
         if (errorResponseDTO == null) {
-            errorResponseDTO.setCode(status.value());
-            errorResponseDTO.setStatus(status.getReasonPhrase());
-            errorResponseDTO.setExceptions(ExceptionDTO.builder()
-                    .exceptionName(ex.getClass().getSimpleName())
-                    .exceptionMessage(ex.getMessage())
-                    .build());
-        };
+            errorResponseDTO = ErrorResponseDTO.builder()
+                    .code(status.value())
+                    .status(status.getReasonPhrase())
+                    .exceptions(ExceptionDTO.builder()
+                                    .exceptionName(ex.getClass().getSimpleName())
+                                    .exceptionMessage(ex.getMessage())
+                                    .build())
+                    .build();
+        }
 
         return super.handleExceptionInternal(ex, errorResponseDTO, headers, status, request);
     }
