@@ -50,7 +50,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
                     .password(bCryptEncoder.encode(userRegistrationDTO.getPassword()))
                     .firstName(userRegistrationDTO.getFirstName())
                     .lastName(userRegistrationDTO.getLastName())
-                    .role(roleRepository.findByRoleName(USER_ROLE))
+                    .role(roleRepository.findByRoleName(ROLE_USER))
                     .build()
         );
         return getSuccessResponse(Map.of("userRegistration","User " + userRegistrationDTO.getNickname() + " registered"));
