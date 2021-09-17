@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity (name = "USERS")
@@ -63,7 +62,7 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(this.getRole());
+        grantedAuthorities.add(this.getRole().getRoleName());
         return grantedAuthorities;
     }
 
@@ -74,7 +73,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.getUsername();
+        return this.getNickname();
     }
 
     @Override
@@ -94,6 +93,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

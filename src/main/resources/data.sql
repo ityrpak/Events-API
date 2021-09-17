@@ -1,18 +1,18 @@
 INSERT INTO roles
 ("role_name")
 VALUES
-('USER_ROLE'),
-('MODERATOR_ROLE'),
-('ADMIN_ROLE');
+('ROLE_USER'),
+('ROLE_MODERATOR'),
+('ROLE_ADMIN');
 
 INSERT INTO users
 ("nickname", "password", "email", "first_name", "last_name", "role_id")
 VALUES
-('usuario1', 'usuario1', 'usuario1@gmail.com', 'Ivan', 'Tyrpak', (SELECT roles.id FROM roles WHERE role_name='ADMIN_ROLE')),
-('usuario2', 'usuario2', 'usuario2@gmail.com', 'Juan', 'Perez', (SELECT roles.id FROM roles WHERE role_name='MODERATOR_ROLE')),
-('usuario3', 'usuario3', 'usuario3@gmail.com', 'Andres', 'Fuegos', (SELECT roles.id FROM roles WHERE role_name='USER_ROLE')),
-('usuario4', 'usuario4', 'usuario4@gmail.com', 'Leandro', 'Gutierrez', (SELECT roles.id FROM roles WHERE role_name='USER_ROLE')),
-('usuario5', 'usuario5', 'usuario5@gmail.com', 'Pedro', 'Gomez', (SELECT roles.id FROM roles WHERE role_name='USER_ROLE'));
+('usuario1', 'usuario1', 'usuario1@gmail.com', 'Ivan', 'Tyrpak', (SELECT roles.id FROM roles WHERE role_name='ROLE_ADMIN')),
+('usuario2', 'usuario2', 'usuario2@gmail.com', 'Juan', 'Perez', (SELECT roles.id FROM roles WHERE role_name='ROLE_MODERATOR')),
+('usuario3', 'usuario3', 'usuario3@gmail.com', 'Andres', 'Fuegos', (SELECT roles.id FROM roles WHERE role_name='ROLE_USER')),
+('usuario4', 'usuario4', 'usuario4@gmail.com', 'Leandro', 'Gutierrez', (SELECT roles.id FROM roles WHERE role_name='ROLE_USER')),
+('usuario5', 'usuario5', 'usuario5@gmail.com', 'Pedro', 'Gomez', (SELECT roles.id FROM roles WHERE role_name='ROLE_USER'));
 
 INSERT INTO events
 ("title", "description", "author_id", "created_at","last_updated")

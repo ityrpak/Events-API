@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 
@@ -14,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Role implements GrantedAuthority {
+public class Role {
 
     @Id
     @Column(name = "id", updatable = false, nullable = false)
@@ -25,8 +24,4 @@ public class Role implements GrantedAuthority {
     @Enumerated(EnumType.STRING)
     private RoleEnum roleName;
 
-    @Override
-    public String getAuthority() {
-        return this.getRoleName().toString();
-    }
 }
