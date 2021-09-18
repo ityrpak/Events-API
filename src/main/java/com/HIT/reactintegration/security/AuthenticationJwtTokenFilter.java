@@ -28,9 +28,6 @@ import java.util.Map;
 @Slf4j
 public class AuthenticationJwtTokenFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final String AUTHORIZATION = "Authorization";
-    private final String REJECTION = "Request Rejected: ";
-
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
 
@@ -98,42 +95,6 @@ public class AuthenticationJwtTokenFilter extends UsernamePasswordAuthentication
         out.flush();
 
     }
-
-    //    @Override
-//    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-//
-//        HttpServletRequest httpRequest = (HttpServletRequest) request;
-//        HttpServletResponse httpResponse = (HttpServletResponse) response;
-//
-//        if (httpRequest.getHeader(AUTHORIZATION) != null && httpRequest.getHeader(AUTHORIZATION).length()>7){
-//
-//            final String token = httpRequest.getHeader(AUTHORIZATION).substring(7);
-//
-//            try {
-//                final UserDetails userDetails = userService.loadUserByUsername(jwtTokenUtil.getNicknameFromToken(token));
-//                Authentication authentication = new UsernamePasswordAuthenticationToken(
-//                        userDetails,
-//                        null,
-//                        userDetails.getAuthorities()
-//                );
-//
-//                if (userDetails.isEnabled() && new Date().before(jwtTokenUtil.getExpirationDate(token))) {
-//                    SecurityContextHolder.getContext().setAuthentication(authentication);
-//                }
-//
-//            } catch (SignatureException exception) {
-//                log.warn(REJECTION + exception);
-//            } catch (ExpiredJwtException exception){
-//                log.warn(REJECTION + exception);
-//            } catch (MalformedJwtException exception){
-//                log.warn(REJECTION + exception);
-//                throw new InvalidJWTException(exception.getMessage());
-//            }
-//
-//        }
-//
-//        chain.doFilter(httpRequest,httpResponse);
-//    }
 
 
 }
