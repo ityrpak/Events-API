@@ -9,7 +9,6 @@ import com.HIT.reactintegration.utils.JwtTokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,13 +39,6 @@ public class AuthenticationJwtTokenFilter extends UsernamePasswordAuthentication
         this.authenticationManager = authenticationManager;
         setFilterProcessesUrl("/login");
     }
-
-    @Value("${jwt.secret}")
-    private static String secret;
-
-    @Value("${jwt.expiration.time}")
-    private static Long expirationTime;
-
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
