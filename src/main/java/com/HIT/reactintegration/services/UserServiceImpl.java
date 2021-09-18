@@ -1,10 +1,9 @@
 package com.HIT.reactintegration.services;
 
-import com.HIT.reactintegration.configs.BCryptConfig;
+import com.HIT.reactintegration.configs.DelegatePasswordEncode;
 import com.HIT.reactintegration.dtos.responsesdto.SuccessResponseDTO;
 import com.HIT.reactintegration.dtos.userdto.UserRegistrationDTO;
 import com.HIT.reactintegration.entities.User;
-import com.HIT.reactintegration.enums.RoleEnum;
 import com.HIT.reactintegration.repositories.RoleRepository;
 import com.HIT.reactintegration.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
     private RoleRepository roleRepository;
 
     @Autowired
-    private BCryptConfig bCryptEncoder;
+    private DelegatePasswordEncode passwordEncode;
 
     @Override
     public UserDetails loadUserByUsername(String nickname) throws UsernameNotFoundException {
@@ -47,10 +46,11 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
             User.builder()
                     .nickname(userRegistrationDTO.getNickname())
                     .email(userRegistrationDTO.getEmail())
-                    .password(bCryptEncoder.encode(userRegistrationDTO.getPassword()))
+                    .password(passwordEncode.getDelegatingEncoder("bcrypt").encode(userRegistrationDTO.getPassword()))
                     .firstName(userRegistrationDTO.getFirstName())
                     .lastName(userRegistrationDTO.getLastName())
                     .role(roleRepository.findByRoleName(ROLE_USER))
+                    .enabled(Boolean.TRUE)
                     .build()
         );
         return getSuccessResponse(Map.of("userRegistration","User " + userRegistrationDTO.getNickname() + " registered"));

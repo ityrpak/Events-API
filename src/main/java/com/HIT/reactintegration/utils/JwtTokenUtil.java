@@ -1,20 +1,16 @@
 package com.HIT.reactintegration.utils;
 
-import com.HIT.reactintegration.dtos.responsesdto.SuccessResponseDTO;
-import com.HIT.reactintegration.dtos.userdto.UserLoginDTO;
+import com.HIT.reactintegration.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 @Component
@@ -26,21 +22,20 @@ public class JwtTokenUtil implements Serializable {
     @Value("${jwt.expiration.time}")
     private Long expirationTime;
 
-    public SuccessResponseDTO generateToken(UserLoginDTO userLoginDTO, UserDetails details){
+    public String generateToken(User authenticatedUser){
+
         final HashMap<String, Object> claims = new HashMap<>();
-        claims.put("role", details.getAuthorities());
-        return SuccessResponseDTO.builder()
-                .code(HttpStatus.OK.value())
-                .status(HttpStatus.OK.getReasonPhrase())
-                .data(Map.of("Token", "Bearer " + Jwts
-                        .builder()
-                        .setClaims(claims)
-                        .setSubject(userLoginDTO.getNickname())
-                        .setIssuedAt(new Date(System.currentTimeMillis()))
-                        .setExpiration(new Date(System.currentTimeMillis()+expirationTime))
-                        .signWith(SignatureAlgorithm.HS512,secret)
-                        .compact()))
-                .build();
+            claims.put("role", authenticatedUser.getAuthorities());
+
+            return "Bearer " + Jwts
+                            .builder()
+                            .setClaims(claims)
+                            .setSubject(authenticatedUser.getNickname())
+                            .setIssuedAt(new Date(System.currentTimeMillis()))
+                            .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                            .signWith(SignatureAlgorithm.HS512, secret)
+                            .compact();
+
     }
 
     public String getNicknameFromToken(String jwtToken) {

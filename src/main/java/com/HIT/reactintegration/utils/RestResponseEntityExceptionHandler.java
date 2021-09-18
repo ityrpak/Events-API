@@ -1,12 +1,11 @@
 package com.HIT.reactintegration.utils;
 
 import com.HIT.reactintegration.dtos.exceptiondto.ExceptionDTO;
-import com.HIT.reactintegration.exceptions.EntityAlreadyExistsException;
-import com.HIT.reactintegration.exceptions.EntityNotFoundException;
-import com.HIT.reactintegration.exceptions.NoRecordsFoundException;
-import com.HIT.reactintegration.exceptions.EventNotSavedException;
+import com.HIT.reactintegration.exceptions.*;
 import com.HIT.reactintegration.dtos.responsesdto.ErrorResponseDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.HashMap;
 
 @ControllerAdvice
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @Slf4j
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 

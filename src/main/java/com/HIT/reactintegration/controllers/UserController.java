@@ -39,11 +39,9 @@ public class UserController {
     }
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity loginUser(@RequestBody @Validated UserLoginDTO userLoginDTO){
+    public void loginUser(@RequestBody @Validated UserLoginDTO userLoginDTO){
         try {
             UserDetails userDetails = userService.loadUserByUsername(userLoginDTO.getNickname());
-            return ResponseEntity.status(HttpStatus.OK).body(jwtTokenUtil.generateToken(userLoginDTO, userDetails));
-
         } catch (UsernameNotFoundException ex){
             throw new EntityNotFoundException("nickname", userLoginDTO.getNickname());
         }

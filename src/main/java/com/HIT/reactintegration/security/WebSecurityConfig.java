@@ -1,7 +1,8 @@
 package com.HIT.reactintegration.security;
 
-import com.HIT.reactintegration.configs.BCryptConfig;
+import com.HIT.reactintegration.configs.DelegatePasswordEncode;
 import com.HIT.reactintegration.services.UserServiceImpl;
+import com.HIT.reactintegration.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +13,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.sql.DataSource;
 
@@ -24,13 +24,16 @@ import javax.sql.DataSource;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private BCryptConfig bCryptEncoder;
+    private DelegatePasswordEncode passwordEncode;
 
     @Autowired
     private UserServiceImpl userService;
 
     @Autowired
     private DataSource dataSource;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -40,38 +43,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeRequests().antMatchers("/").permitAll();
+                .authorizeRequests().antMatchers("/").permitAll()
+                .and()
+                .addFilter(new AuthenticationJwtTokenFilter(jwtTokenUtil, authenticationManagerBean()));
     }
 
     @Bean
+    @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .userDetailsService(userService).passwordEncoder(bCryptEncoder.encode()).and()
+                .userDetailsService(userService)
+                .and()
                 .jdbcAuthentication()
                 .dataSource(dataSource)
-                .usersByUsernameQuery("SELECT nickname, password "
+                .passwordEncoder(passwordEncode.getDelegatingEncoder("bcrypt"))
+                .usersByUsernameQuery("SELECT nickname, password, enabled "
                         + "FROM users "
                         + "WHERE nickname = ?")
                 .authoritiesByUsernameQuery("SELECT nickname, role_id "
-                        + "FROM users"
+                        + "FROM users "
                         + "WHERE nickname = ?");
     }
 
-    @Bean
-    public AuthenticationJwtTokenFilter authenticationTokenFilterBean() throws Exception {
-        AuthenticationJwtTokenFilter filter = new AuthenticationJwtTokenFilter();
-        filter.setAuthenticationManager(authenticationManagerBean());
-        return filter;
-    }
 
 }
