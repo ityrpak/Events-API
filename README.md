@@ -1,4 +1,9 @@
 # Events API
+
+![](https://img.shields.io/badge/Java-11-orange) ![](https://img.shields.io/badge/Spring%20Boot-2.5.4-green)
+
+
+
 ## Installation and Setup
 
 #### Clone Repository
@@ -21,7 +26,7 @@
 
 Events API is a project consisting of a RESTful API for Events organization. Users are able to register into the system and create events, where users are able to confirm assistance. Users are able to get a summary of all subscribed and created events.
 
-## Roadmap (WIP)
+## Roadmap
 
 - [ ] V 0.1
   - Users are able to register and authenticate.
@@ -64,7 +69,3 @@ Events API is a project consisting of a RESTful API for Events organization. Use
 - [ ] V 1.0 (RELEASE)
   - MercadoPago API Integration.
 - [ ] V 1.1 ... and beyond!
-
-## Key Topics
-
-## Useful Links
