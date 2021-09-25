@@ -65,7 +65,6 @@ public class AuthenticationJwtTokenFilter extends UsernamePasswordAuthentication
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
-//        String successResponseDTO = new Gson().toJson(jwtTokenUtil.generateToken(authenticatedUser));
         String successResponseDTO = new Gson().toJson(SuccessResponseDTO.builder()
                         .code(HttpStatus.OK.value())
                         .status(HttpStatus.OK.getReasonPhrase())

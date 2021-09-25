@@ -9,6 +9,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -90,6 +92,14 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler(EntityAlreadyExistsException.class)
     protected ResponseEntity<Object> handleEntityAlreadyExistsException(EntityAlreadyExistsException ex){
         HttpStatus httpStatus = HttpStatus.CONFLICT;
+        ErrorResponseDTO exceptionBodyResponse = createErrorResponse(ex, httpStatus);
+        log.info(returnStatus(exceptionBodyResponse));
+        return new ResponseEntity<Object>(exceptionBodyResponse, httpStatus);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    protected ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex){
+        HttpStatus httpStatus = HttpStatus.FORBIDDEN;
         ErrorResponseDTO exceptionBodyResponse = createErrorResponse(ex, httpStatus);
         log.info(returnStatus(exceptionBodyResponse));
         return new ResponseEntity<Object>(exceptionBodyResponse, httpStatus);

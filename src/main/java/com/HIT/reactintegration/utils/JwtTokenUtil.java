@@ -1,6 +1,8 @@
 package com.HIT.reactintegration.utils;
 
 import com.HIT.reactintegration.entities.User;
+import com.HIT.reactintegration.enums.RoleEnum;
+import com.HIT.reactintegration.exceptions.EntityNotFoundException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.function.Function;
@@ -42,9 +45,18 @@ public class JwtTokenUtil implements Serializable {
         return getClaimFromToken(jwtToken, Claims::getSubject);
     }
 
-    public String getRoleFromToken(String jwtToken) {
+    public RoleEnum getRoleFromToken(String jwtToken) {
         return getClaimFromToken(jwtToken,
-                (Claims claims) -> claims.get("role").toString());
+                (Claims claims) -> {
+            RoleEnum role = null;
+                    try {
+                        ArrayList<String> roleString = (ArrayList<String>) claims.get("role");
+                        role = RoleEnum.valueOf(roleString.get(0));
+                    } catch (IllegalArgumentException ex) {
+
+                    }
+                    return role;
+                });
     }
 
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver){

@@ -45,7 +45,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests().antMatchers("/").permitAll()
                 .and()
-                .addFilter(new AuthenticationJwtTokenFilter(jwtTokenUtil, authenticationManagerBean()));
+                .addFilter(new AuthenticationJwtTokenFilter(jwtTokenUtil, authenticationManagerBean()))
+                .addFilter(new AuthorizationJwtTokenFilter(jwtTokenUtil, authenticationManagerBean()));
     }
 
     @Bean
