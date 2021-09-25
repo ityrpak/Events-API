@@ -49,7 +49,7 @@ public class AuthorizationJwtTokenFilter extends BasicAuthenticationFilter {
                 chain.doFilter(request, response);
                     if (response.getStatus() == 200) {
                         return;
-                    } else if (response.getStatus() == 403) {
+                    } else if (response.getStatus() == 401) {
                         throw new AccessDeniedException("");
                     }
             }
