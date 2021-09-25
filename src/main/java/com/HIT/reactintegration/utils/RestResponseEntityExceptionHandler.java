@@ -99,7 +99,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(AccessDeniedException.class)
     protected ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex){
-        HttpStatus httpStatus = HttpStatus.FORBIDDEN;
+        HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
         ErrorResponseDTO exceptionBodyResponse = createErrorResponse(ex, httpStatus);
         log.info(returnStatus(exceptionBodyResponse));
         return new ResponseEntity<Object>(exceptionBodyResponse, httpStatus);
