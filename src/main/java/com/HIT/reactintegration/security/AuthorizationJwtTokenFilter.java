@@ -49,14 +49,14 @@ public class AuthorizationJwtTokenFilter extends BasicAuthenticationFilter {
                 chain.doFilter(request, response);
                     if (response.getStatus() == 200) {
                         return;
-                    } else if (response.getStatus() == 401) {
+                    } else if (response.getStatus() == 401 || response.getStatus() == 403) {
                         throw new AccessDeniedException("");
                     }
             }
 
             if (header != null && !header.startsWith(TOKEN_PREFIX)) {
                 throw new UnsupportedJwtException("Bearer prefix malformed or null");
-            } else {
+            } else if (header != null && header.startsWith(TOKEN_PREFIX)) {
             UsernamePasswordAuthenticationToken authenticationToken = getAuthentication(request, header);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             chain.doFilter(request,response);

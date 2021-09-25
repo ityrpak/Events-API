@@ -12,6 +12,7 @@ import com.HIT.reactintegration.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -36,13 +37,13 @@ public class EventServiceImpl implements IEventService {
             Event event = new Event(
                     eventDTO.getEventTitle(),
                     eventDTO.getEventDescription(),
-                    userRepository.findByNickname(eventDTO.getEventUserNickname()).orElseThrow());
+                    userRepository.findByNickname(SecurityContextHolder.getContext().getAuthentication().getName()).get());
             eventRepository.save(event);
             responseMsg = getSuccessResponse(Map.of("Success message", "Event saved"));
         } catch (DataIntegrityViolationException ex){
             throw new EventNotSavedException(ex.getCause().getMessage());
         } catch (NoSuchElementException ex){
-            throw new EntityNotFoundException("Nickname" ,eventDTO.getEventUserNickname());
+            throw new EntityNotFoundException("Nickname" , SecurityContextHolder.getContext().getAuthentication().getName());
         }
         return responseMsg;
     }

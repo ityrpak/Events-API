@@ -22,8 +22,4 @@ public class EventDTO {
     @NotBlank(message = "must not be blank")
     private String eventDescription;
 
-    @JsonProperty(value = "authorNickname")
-    @NotBlank(message = "must not be blank")
-    private String eventUserNickname;
-
 }
