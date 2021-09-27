@@ -1,6 +1,6 @@
 # Events API
 
-![](https://img.shields.io/badge/Java-11-orange) ![](https://img.shields.io/badge/Spring%20Boot-2.5.4-green)
+![](https://img.shields.io/badge/Java-11-orange) ![](https://img.shields.io/badge/Spring%20Boot-2.5.4-green) ![](https://img.shields.io/badge/Junit-5.0-%23DC4854)
 
 
 
